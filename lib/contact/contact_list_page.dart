@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:myapp/book/book_edit_page.dart';
-import 'package:myapp/book/book_list_viewmodel.dart';
-import 'package:myapp/book/book.dart';
+import 'package:myapp/contact/contact_edit_page.dart';
+import 'package:myapp/contact/contact_list_viewmodel.dart';
+import 'package:myapp/contact/contact.dart';
 
-class BookListPage extends ConsumerWidget {
-  const BookListPage({super.key});
+class ContactListPage extends ConsumerWidget {
+  const ContactListPage({super.key});
 
   void _onUpdate(WidgetRef ref) {
-    ref.invalidate(bookListViewModelProvider);
+    ref.invalidate(contactListViewModelProvider);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bookList = ref.watch(bookListViewModelProvider);
+    final contactList = ref.watch(contactListViewModelProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Book List'),
+        title: const Text('Contact List'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final saved = await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const BookEditPage(
-                bookId: null,
+              builder: (context) => const ContactEditPage(
+                contactId: null,
               ),
             ),
           );
@@ -34,8 +34,8 @@ class BookListPage extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: Center(
-        child: bookList.when(
-          data: (list) => _buildBookList(ref, list),
+        child: contactList.when(
+          data: (list) => _buildContactList(ref, list),
           error: _buildError,
           loading: () => const CircularProgressIndicator(),
         ),
@@ -52,19 +52,19 @@ class BookListPage extends ConsumerWidget {
         ),
       );
 
-  Widget? _buildBookList(WidgetRef ref, List<Book> list) {
+  Widget? _buildContactList(WidgetRef ref, List<Contact> list) {
     if (list.isEmpty) {
       return const Center(
-        child: Text('No books found'),
+        child: Text('No contacts found'),
       );
     } else {
       return ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, index) {
-          Book book = list[index];
+          Contact contact = list[index];
           return ListTile(
-            title: Text(book.title),
-            subtitle: Text(book.isCompleted ? 'Completed' : 'Not completed'),
+            title: Text(contact.title),
+            subtitle: Text(contact.isCompleted ? 'Completed' : 'Not completed'),
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
@@ -72,7 +72,7 @@ class BookListPage extends ConsumerWidget {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Delete Book'),
+                    title: const Text('Delete Contact'),
                     content: const Text('Are you sure?'),
                     actions: [
                       TextButton(
@@ -85,8 +85,8 @@ class BookListPage extends ConsumerWidget {
                         onPressed: () {
                           Navigator.of(context).pop();
                           ref
-                              .read(bookListViewModelProvider.notifier)
-                              .delete(book);
+                              .read(contactListViewModelProvider.notifier)
+                              .delete(contact);
                         },
                         child: const Text('Delete'),
                       ),
@@ -98,7 +98,7 @@ class BookListPage extends ConsumerWidget {
             onTap: () async {
               final saved = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => BookEditPage(bookId: book.id),
+                  builder: (context) => ContactEditPage(contactId: contact.id),
                 ),
               );
               if (saved == true) {

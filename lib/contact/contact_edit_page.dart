@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:myapp/book/book.dart';
-import 'package:myapp/book/book_edit_viewmodel.dart';
+import 'package:myapp/contact/contact.dart';
+import 'package:myapp/contact/contact_edit_viewmodel.dart';
 
-class BookEditPage extends ConsumerStatefulWidget {
-  final String? bookId;
-  const BookEditPage({super.key, required this.bookId});
+class ContactEditPage extends ConsumerStatefulWidget {
+  final String? contactId;
+  const ContactEditPage({super.key, required this.contactId});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _BookEditPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ContactEditPageState();
 }
 
-class _BookEditPageState extends ConsumerState<BookEditPage> {
-  get isNewBook => widget.bookId == null;
-  Book? book;
+class _ContactEditPageState extends ConsumerState<ContactEditPage> {
+  get isNewContact => widget.contactId == null;
+  Contact? contact;
   late final TextEditingController _titleController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -31,21 +31,21 @@ class _BookEditPageState extends ConsumerState<BookEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bookAsync = ref.watch(bookEditViewModelProvider(widget.bookId));
+    final contactAsync = ref.watch(contactEditViewModelProvider(widget.contactId));
 
-    if (book == null && bookAsync.hasValue) {
-      book = bookAsync.value!.copyWith();
-      _titleController.text = book!.title;
+    if (contact == null && contactAsync.hasValue) {
+      contact = contactAsync.value!.copyWith();
+      _titleController.text = contact!.title;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${isNewBook ? "New" : "Edit"} Book'),
+        title: Text('${isNewContact ? "New" : "Edit"} Contact'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: bookAsync.when(
-          data: (originalBook) => _buildForm(context),
+        child: contactAsync.when(
+          data: (originalContact) => _buildForm(context),
           error: (error, stackTrace) => Text('Error: $error'),
           loading: () => const Center(child: CircularProgressIndicator()),
         ),
@@ -64,11 +64,11 @@ class _BookEditPageState extends ConsumerState<BookEditPage> {
               autofocus: true,
               controller: _titleController,
               decoration: const InputDecoration(
-                labelText: 'Book title',
+                labelText: 'Contact title',
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                book = book!.copyWith(title: value);
+                contact = contact!.copyWith(title: value);
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -79,11 +79,11 @@ class _BookEditPageState extends ConsumerState<BookEditPage> {
             ),
             CheckboxListTile(
               title: const Text('Is completed'),
-              value: book!.isCompleted,
+              value: contact!.isCompleted,
               controlAffinity: ListTileControlAffinity.leading,
               onChanged: (value) {
                 setState(() {
-                  book = book!.copyWith(isCompleted: value!);
+                  contact = contact!.copyWith(isCompleted: value!);
                 });
               },
             ),
@@ -101,7 +101,7 @@ class _BookEditPageState extends ConsumerState<BookEditPage> {
       children: [
         ElevatedButton(
           onPressed: _save,
-          child: Text(isNewBook ? 'Create' : 'Save'),
+          child: Text(isNewContact ? 'Create' : 'Save'),
         ),
         const SizedBox(width: 16),
         ElevatedButton(
@@ -118,8 +118,8 @@ class _BookEditPageState extends ConsumerState<BookEditPage> {
       return;
     }
     final notifier =
-        ref.read(bookEditViewModelProvider(widget.bookId).notifier);
-    await notifier.updateState(book!);
+        ref.read(contactEditViewModelProvider(widget.contactId).notifier);
+    await notifier.updateState(contact!);
     await notifier.save();
     if (mounted) {
       Navigator.of(context).pop(true);

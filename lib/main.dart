@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:myapp/book/book_list_page.dart';
+import 'package:myapp/contact/contact_list_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,7 +18,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BookListPage();
+    return ContactListPage();
   }
 }
 
