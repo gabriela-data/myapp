@@ -63,8 +63,8 @@ class ContactListPage extends ConsumerWidget {
         itemBuilder: (context, index) {
           Contact contact = list[index];
           return ListTile(
-            title: Text(contact.title),
-            subtitle: Text(contact.isCompleted ? 'Completed' : 'Not completed'),
+            title: Text(contact.name),
+            subtitle: Text(contact.phone),
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {

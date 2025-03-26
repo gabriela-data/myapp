@@ -14,18 +14,21 @@ class ContactEditPage extends ConsumerStatefulWidget {
 class _ContactEditPageState extends ConsumerState<ContactEditPage> {
   get isNewContact => widget.contactId == null;
   Contact? contact;
-  late final TextEditingController _titleController;
+  late final TextEditingController _nameController;
+  late final TextEditingController _phoneController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController();
+    _nameController = TextEditingController();
+    _phoneController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
+    _nameController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -35,7 +38,8 @@ class _ContactEditPageState extends ConsumerState<ContactEditPage> {
 
     if (contact == null && contactAsync.hasValue) {
       contact = contactAsync.value!.copyWith();
-      _titleController.text = contact!.title;
+      _nameController.text = contact!.name;
+      _phoneController.text = contact!.phone;
     }
 
     return Scaffold(
@@ -60,33 +64,54 @@ class _ContactEditPageState extends ConsumerState<ContactEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextFormField(
-              autofocus: true,
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Contact title',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                contact = contact!.copyWith(title: value);
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a title';
-                }
-                return null;
-              },
+            Column(
+              children: [
+                TextFormField(
+                  autofocus: true,
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Contact Name',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    contact = contact!.copyWith(name: value);
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    contact = contact!.copyWith(phone: value);
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a phone number';
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
-            CheckboxListTile(
-              title: const Text('Is completed'),
-              value: contact!.isCompleted,
-              controlAffinity: ListTileControlAffinity.leading,
-              onChanged: (value) {
-                setState(() {
-                  contact = contact!.copyWith(isCompleted: value!);
-                });
-              },
-            ),
+            //CheckboxListTile(
+            //  title: const Text('Is completed'),
+            //  value: contact!.isCompleted,
+            //  controlAffinity: ListTileControlAffinity.leading,
+            //  onChanged: (value) {
+            //    setState(() {
+            //     contact = contact!.copyWith(isCompleted: value!);
+            //    });
+            //  },
+            //),
             const SizedBox(height: 16),
             _buildButtonBar(ref, context),
           ],

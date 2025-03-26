@@ -10,7 +10,6 @@ sealed class Contact with _$Contact {
     String? id,
     required String name,
     required String phone,
-    @Default([]) List<Contact> contacts,
   }) = _Contact;
 
   factory Contact.empty() => const Contact(
