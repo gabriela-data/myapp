@@ -66,35 +66,19 @@ class ContactListPage extends ConsumerWidget {
             title: Text(contact.name),
             subtitle: Text(contact.phone),
             trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                // create dialog
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Delete Contact'),
-                    content: const Text('Are you sure?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          ref
-                              .read(contactListViewModelProvider.notifier)
-                              .delete(contact);
-                        },
-                        child: const Text('Delete'),
-                      ),
-                    ],
+              icon: const Icon(Icons.edit),
+              onPressed: () async {
+                final saved = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ContactEditPage(contactId: contact.id),
                   ),
                 );
+                if (saved == true) {
+                  _onUpdate(ref);
+                }
               },
             ),
+           
             onTap: () async {
               final saved = await Navigator.of(context).push(
                 MaterialPageRoute(

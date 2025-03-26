@@ -57,3 +57,8 @@ class SignInPage extends ConsumerWidget {
     );
   }
 }
+
+
+// Como vai ter autenticação, o usuário vai ter um id, então o id vai ser passado para o contactListViewModelProvider
+// e o usuário vai ter que acessar só os dados do cadastro dele
+// e o contactListViewModelProvider vai ter que ser modificado para receber o id do usuário
